@@ -63,21 +63,27 @@ export default function TransactionForm({
       return
     }
 
-    const transactionData = {
+    // Código alterado
+    const transactionData: Omit<Transaction, "id"> = {
       type: formData.type,
       amount: Number.parseFloat(formData.amount),
       description: formData.description,
       category: formData.category,
       date: formData.date,
       paid: formData.paid,
-      goalId: formData.goalId || undefined,
+    };
+
+    // Adiciona a meta apenas se houver um valor selecionado e não for "none"
+    if (formData.goalId && formData.goalId !== "none") {
+      (transactionData as Transaction).goalId = formData.goalId;
     }
 
     if (editingTransaction && onEditTransaction) {
-      onEditTransaction(editingTransaction.id, transactionData)
+      onEditTransaction(editingTransaction.id, transactionData);
     } else if (onAddTransaction) {
-      onAddTransaction(transactionData)
+      onAddTransaction(transactionData);
     }
+    // Fim do código alterado
 
     onClose()
   }
