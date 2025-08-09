@@ -1,30 +1,42 @@
-# Sistema de controle financeiro
+Com base nos arquivos do seu projeto e na nossa conversa, preparei um arquivo README.md completo para você usar no seu repositório do GitHub.
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+Este README.md descreve as funcionalidades do sistema, as tecnologias utilizadas e as instruções para começar, o que é ideal para apresentar seu projeto a outros desenvolvedores.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/davidsonrj1-gmailcoms-projects/v0-sistema-de-controle-financeiro)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/b4PpAk0Xcpa)
+README.md
+Grana Fácil: Sistema de Controle Financeiro Pessoal
+Um sistema simples e intuitivo para ajudar você a gerenciar suas finanças pessoais, acompanhar receitas e despesas, e planejar suas metas financeiras.
 
-## Overview
+Visão Geral
+O Grana Fácil é uma aplicação web desenvolvida para fornecer uma visão clara e organizada das suas finanças. Com ele, você pode registrar transações, categorizar gastos, definir e monitorar metas de economia, e gerenciar transações recorrentes para automatizar seu controle financeiro.
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+Funcionalidades Principais
+Autenticação Segura: Login com conta Google, garantindo que seus dados sejam privados e acessíveis apenas por você.
 
-## Deployment
+Gestão de Transações: Adicione, edite e exclua receitas e despesas. As transações são exibidas em uma tabela com filtros por tipo, categoria e data.
 
-Your project is live at:
+Visão Geral (Dashboard): Acompanhe o saldo atual e compare receitas e despesas mensais com gráficos interativos.
 
-**[https://vercel.com/davidsonrj1-gmailcoms-projects/v0-sistema-de-controle-financeiro](https://vercel.com/davidsonrj1-gmailcoms-projects/v0-sistema-de-controle-financeiro)**
+Organização por Categorias: Crie e gerencie categorias personalizadas para classificar suas transações (ex: "Alimentação", "Salário", "Transporte").
 
-## Build your app
+Planejamento de Metas: Defina metas financeiras e monitore seu progresso com um indicador visual, associando receitas para atingir seus objetivos mais rápido.
 
-Continue building your app on:
+Transações Recorrentes: Configure transações que se repetem mensalmente para que sejam adicionadas automaticamente ao seu histórico.
 
-**[https://v0.dev/chat/projects/b4PpAk0Xcpa](https://v0.dev/chat/projects/b4PpAk0Xcpa)**
+Dados em Tempo Real: Sincronização em tempo real com o Firestore para que suas alterações sejam atualizadas instantaneamente em todos os seus dispositivos.
 
-## How It Works
+Tecnologias
+O projeto é construído com as seguintes tecnologias e bibliotecas:
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Next.js: Framework de React para desenvolvimento de aplicações web.
+
+React: Biblioteca JavaScript para construir interfaces de usuário.
+
+Firebase: Plataforma para autenticação de usuários e armazenamento de dados em tempo real com Firestore.
+
+Tailwind CSS: Framework utilitário de CSS para estilização rápida e responsiva.
+
+Recharts: Biblioteca para criação de gráficos e visualização de dados (dashboards).
+
+Shadcn/ui: Componentes de interface de usuário reutilizáveis.
+
+Estrutura de Pastas
