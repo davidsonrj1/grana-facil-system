@@ -14,6 +14,7 @@ import { batchOperations } from "@/lib/firestore"
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false); // Adicionei esta linha
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -21,7 +22,7 @@ export const useAuth = () => {
       setLoading(false)
 
       // Initialize default categories for new users
-      if (user) {
+      if (user && !initialDataLoaded) { // Adicionei !initialDataLoaded
         try {
           // Check if user already has categories by trying to get them
           // If none exist, initialize default ones
@@ -31,6 +32,7 @@ export const useAuth = () => {
           if (categories.length === 0) {
             await batchOperations.initializeDefaultCategories(user.uid)
           }
+          setInitialDataLoaded(true); // Marque como inicializado para evitar repetições
         } catch (error) {
           console.error("Error initializing user data:", error)
         }
@@ -38,7 +40,7 @@ export const useAuth = () => {
     })
 
     return () => unsubscribe()
-  }, [])
+  }, [initialDataLoaded]) // Adicionei initialDataLoaded como dependência
 
   const signInWithGoogle = async () => {
     try {
