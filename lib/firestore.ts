@@ -11,6 +11,7 @@ import {
   onSnapshot,
   Timestamp,
   writeBatch,
+  getDoc,
 } from "firebase/firestore"
 import { db } from "./firebase"
 import type { Transaction, Category, Goal, RecurringTransaction } from "@/app/page"
@@ -21,6 +22,7 @@ const COLLECTIONS = {
   CATEGORIES: "categories",
   GOALS: "goals",
   RECURRING: "recurring",
+  USERS: "users",
 } as const
 
 // Firestore data types
@@ -250,9 +252,12 @@ export const recurringOperations = {
 export const batchOperations = {
   // Initialize default categories for new user
   initializeDefaultCategories: async (userId: string): Promise<void> => {
-    const existingCategories = await categoryOperations.getByUser(userId);
-    if (existingCategories.length > 0) {
-      console.log("Categorias já existem para este usuário. Inicialização ignorada.");
+    const userDocRef = doc(db, COLLECTIONS.USERS, userId);
+    const userDoc = await getDoc(userDocRef);
+
+    // Se o documento do usuário já existe e a inicialização já foi feita, saia
+    if (userDoc.exists() && userDoc.data()?.initialSetupCompleted) {
+      console.log("Inicialização já concluída para este usuário.");
       return;
     }
     
@@ -266,6 +271,9 @@ export const batchOperations = {
     ]
 
     const batch = writeBatch(db)
+
+    // Adicione um documento para o usuário marcando a inicialização como concluída
+    batch.set(userDocRef, { initialSetupCompleted: true });
 
     defaultCategories.forEach((category) => {
       const docRef = doc(collection(db, COLLECTIONS.CATEGORIES))
