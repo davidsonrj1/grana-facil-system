@@ -17,7 +17,7 @@ import { db } from "./firebase"
 import type { Transaction, Category, Goal, RecurringTransaction } from "@/app/page"
 
 // Collections
-const COLLECTIONS = {
+export const COLLECTIONS = {
   TRANSACTIONS: "transactions",
   CATEGORIES: "categories",
   GOALS: "goals",
@@ -255,12 +255,13 @@ export const batchOperations = {
     const userDocRef = doc(db, COLLECTIONS.USERS, userId);
     const userDoc = await getDoc(userDocRef);
 
-    // Se o documento do usuário já existe e a inicialização já foi feita, saia
-    if (userDoc.exists() && userDoc.data()?.initialSetupCompleted) {
+    // Se o documento de controle já existe, a inicialização já foi feita.
+    if (userDoc.exists()) {
       console.log("Inicialização já concluída para este usuário.");
       return;
     }
     
+    // Se não, vamos criar o documento de controle e as categorias.
     const defaultCategories = [
       { name: "Educação", color: "#3b82f6", type: "expense" as const },
       { name: "Transporte", color: "#f59e0b", type: "expense" as const },
@@ -272,7 +273,7 @@ export const batchOperations = {
 
     const batch = writeBatch(db)
 
-    // Adicione um documento para o usuário marcando a inicialização como concluída
+    // Crie o documento de controle do usuário como parte da mesma operação em lote.
     batch.set(userDocRef, { initialSetupCompleted: true });
 
     defaultCategories.forEach((category) => {

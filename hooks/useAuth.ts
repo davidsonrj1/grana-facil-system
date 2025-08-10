@@ -7,10 +7,15 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateProfile,
+  reauthenticateWithPopup,
   type User,
 } from "firebase/auth"
-import { auth } from "@/lib/firebase"
-import { batchOperations, transactionOperations, categoryOperations, goalOperations, recurringOperations } from "@/lib/firestore"
+import {
+  doc,
+  deleteDoc,
+} from "firebase/firestore"
+import { auth, db } from "@/lib/firebase";
+import { batchOperations, transactionOperations, categoryOperations, goalOperations, recurringOperations, COLLECTIONS } from "@/lib/firestore"
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null)
@@ -53,14 +58,12 @@ export const useAuth = () => {
     }
   }
 
-  // NOVA FUNÇÃO: Atualizar nome de usuário
   const updateUserName = async (newName: string) => {
     if (user) {
       try {
         await updateProfile(user, {
           displayName: newName,
         })
-        setUser({ ...user, displayName: newName })
         console.log("Nome de usuário atualizado com sucesso!")
       } catch (error) {
         console.error("Erro ao atualizar o nome de usuário:", error)
@@ -68,13 +71,15 @@ export const useAuth = () => {
     }
   }
 
-  // NOVA FUNÇÃO: Deletar conta com todos os dados
   const deleteUserAccount = async () => {
     if (user) {
       try {
-        // Deletar todas as transações, categorias, metas e recorrentes do usuário
-        // Esta é uma implementação simplificada. Em um ambiente de produção, seria ideal
-        // ter uma função de servidor (Cloud Function) para fazer isso de forma mais segura.
+        // Passo 1: Reautenticar o usuário
+        const provider = new GoogleAuthProvider()
+        await reauthenticateWithPopup(user, provider);
+        console.log("Reautenticação bem-sucedida.");
+
+        // Passo 2: Deletar todos os dados no Firestore
         console.log("Deletando dados do usuário...");
         
         // Exclusão de transações
@@ -93,10 +98,11 @@ export const useAuth = () => {
         const recurringToDelete = await recurringOperations.getByUser(user.uid);
         await Promise.all(recurringToDelete.map(r => recurringOperations.delete(r.id)));
 
-        // Excluir o documento de inicialização para permitir uma nova configuração no futuro
-        // Lógica de exclusão do documento do usuário
-        
-        // Deletar o usuário do Firebase Auth
+        // Passo 3: Deletar o documento de controle do usuário
+        const userDocRef = doc(db, COLLECTIONS.USERS, user.uid);
+        await deleteDoc(userDocRef);
+
+        // Passo 4: Deletar o usuário do Firebase Auth
         await user.delete();
 
         console.log("Conta e dados deletados com sucesso. Redirecionando...");
