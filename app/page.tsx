@@ -12,6 +12,7 @@ import {
   PieChart,
   LogOut,
   Clock,
+  Tag as TagIcon, // Importamos TagIcon para não conflitar com a tipagem
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,9 @@ import DatePicker from "@/components/date-picker"
 import AuthGuard from "@/components/auth-guard"
 import { useAuth } from "@/hooks/useAuth"
 import { transactionOperations, categoryOperations, goalOperations, recurringOperations } from "@/lib/firestore"
+
+// IMPORTAÇÃO DO NOVO COMPONENTE
+import MonthlyReport from "@/components/monthly-report";
 
 export interface Transaction {
   id: string
@@ -453,6 +457,16 @@ export default function FinancialControlSystem() {
                 <Clock className="w-4 h-4" />
                 <span>Recorrentes</span>
               </button>
+              {/* NOVO BOTÃO PARA O RELATÓRIO MENSAL */}
+              <button
+                onClick={() => setActiveView("monthlyReport")}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors ${
+                  activeView === "monthlyReport" ? "bg-white/20" : "hover:bg-white/10"
+                }`}
+              >
+                <TagIcon className="w-4 h-4" />
+                <span>Relatório Mensal</span>
+              </button>
             </nav>
 
             <div className="flex items-center space-x-4">
@@ -685,6 +699,16 @@ export default function FinancialControlSystem() {
                 onProcessRecurring={processRecurringTransactions}
               />
             )}
+            
+            {/* NOVO TRECHO DE CÓDIGO */}
+            {activeView === "monthlyReport" && (
+              <MonthlyReport
+                transactions={transactions}
+                categories={categories}
+                currentDate={currentDate}
+              />
+            )}
+            {/* FIM DO NOVO TRECHO DE CÓDIGO */}
 
             {/* Transaction Form Modal */}
             {showTransactionForm && (
