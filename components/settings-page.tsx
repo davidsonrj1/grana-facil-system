@@ -9,17 +9,25 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import ConfirmationModal from "@/components/confirmation-modal"
 import { Label } from "@/components/ui/label"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export default function SettingsPage() {
   const { user, updateUserName, deleteUserAccount } = useAuth()
   const [newName, setNewName] = useState(user?.displayName || "")
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false) // Novo estado para o modal de carregamento
 
   const handleNameChange = async (e: React.FormEvent) => {
     e.preventDefault()
     if (newName.trim() !== "" && user?.displayName !== newName) {
       await updateUserName(newName)
     }
+  }
+
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true)
+    await deleteUserAccount()
+    setIsDeleting(false) // A função de exclusão já redireciona, mas por segurança mantemos a flag.
   }
 
   return (
@@ -69,6 +77,7 @@ export default function SettingsPage() {
             variant="destructive"
             onClick={() => setIsConfirmationModalOpen(true)}
             className="w-full md:w-auto"
+            disabled={isDeleting}
           >
             <LogOut className="w-4 h-4 mr-2" />
             Excluir minha conta
@@ -76,16 +85,32 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
+      {/* Modal de confirmação de exclusão */}
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
         onClose={() => setIsConfirmationModalOpen(false)}
-        onConfirm={deleteUserAccount}
+        onConfirm={handleDeleteConfirm}
         title="Tem certeza?"
         message="A exclusão da conta irá apagar todos os seus dados de forma permanente. Esta ação não pode ser desfeita."
         confirmText="Sim, excluir minha conta"
         cancelText="Cancelar"
         type="danger"
       />
+
+      {/* NOVO: Modal de carregamento */}
+      <Dialog open={isDeleting}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <RefreshCw className="w-5 h-5 animate-spin" />
+              <span>Excluindo conta...</span>
+            </DialogTitle>
+            <DialogDescription>
+              Por favor, aguarde enquanto deletamos todos os seus dados.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

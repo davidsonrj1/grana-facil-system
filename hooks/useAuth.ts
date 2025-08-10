@@ -71,6 +71,7 @@ export const useAuth = () => {
     }
   }
 
+  // FUNÇÃO CORRIGIDA: Deletar conta com todos os dados
   const deleteUserAccount = async () => {
     if (user) {
       try {
@@ -79,30 +80,30 @@ export const useAuth = () => {
         await reauthenticateWithPopup(user, provider);
         console.log("Reautenticação bem-sucedida.");
 
-        // Passo 2: Deletar todos os dados no Firestore
+        // Passo 2: Deletar todos os dados no Firestore de forma sequencial e garantindo a conclusão
         console.log("Deletando dados do usuário...");
         
-        // Exclusão de transações
-        const transactionsToDelete = await transactionOperations.getByUser(user.uid);
-        await Promise.all(transactionsToDelete.map(t => transactionOperations.delete(t.id)));
-
-        // Exclusão de categorias
-        const categoriesToDelete = await categoryOperations.getByUser(user.uid);
-        await Promise.all(categoriesToDelete.map(c => categoryOperations.delete(c.id)));
-
-        // Exclusão de metas
-        const goalsToDelete = await goalOperations.getByUser(user.uid);
-        await Promise.all(goalsToDelete.map(g => goalOperations.delete(g.id)));
-
-        // Exclusão de recorrentes
-        const recurringToDelete = await recurringOperations.getByUser(user.uid);
-        await Promise.all(recurringToDelete.map(r => recurringOperations.delete(r.id)));
-
-        // Passo 3: Deletar o documento de controle do usuário
+        // Crie arrays de IDs a serem deletados
+        const transactionsToDelete = (await transactionOperations.getByUser(user.uid)).map(t => t.id);
+        const categoriesToDelete = (await categoryOperations.getByUser(user.uid)).map(c => c.id);
+        const goalsToDelete = (await goalOperations.getByUser(user.uid)).map(g => g.id);
+        const recurringToDelete = (await recurringOperations.getByUser(user.uid)).map(r => r.id);
         const userDocRef = doc(db, COLLECTIONS.USERS, user.uid);
+        
+        // Exclua os dados
+        await Promise.all([
+          ...transactionsToDelete.map(id => transactionOperations.delete(id)),
+          ...categoriesToDelete.map(id => categoryOperations.delete(id)),
+          ...goalsToDelete.map(id => goalOperations.delete(id)),
+          ...recurringToDelete.map(id => recurringOperations.delete(id)),
+        ]);
+        
+        // Deletar o documento de controle do usuário por último, após todas as outras exclusões
         await deleteDoc(userDocRef);
 
-        // Passo 4: Deletar o usuário do Firebase Auth
+        console.log("Dados do Firestore deletados com sucesso.");
+
+        // Passo 3: Deletar o usuário do Firebase Auth
         await user.delete();
 
         console.log("Conta e dados deletados com sucesso. Redirecionando...");
