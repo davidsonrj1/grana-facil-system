@@ -12,7 +12,7 @@ import {
   PieChart,
   LogOut,
   Clock,
-  Tag as TagIcon, // Importamos TagIcon para não conflitar com a tipagem
+  Tag as TagIcon,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -26,9 +26,9 @@ import DatePicker from "@/components/date-picker"
 import AuthGuard from "@/components/auth-guard"
 import { useAuth } from "@/hooks/useAuth"
 import { transactionOperations, categoryOperations, goalOperations, recurringOperations } from "@/lib/firestore"
-
-// IMPORTAÇÃO DO NOVO COMPONENTE
 import MonthlyReport from "@/components/monthly-report";
+import SettingsPage from "@/components/settings-page";
+
 
 export interface Transaction {
   id: string
@@ -457,7 +457,6 @@ export default function FinancialControlSystem() {
                 <Clock className="w-4 h-4" />
                 <span>Recorrentes</span>
               </button>
-              {/* NOVO BOTÃO PARA O RELATÓRIO MENSAL */}
               <button
                 onClick={() => setActiveView("monthlyReport")}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors ${
@@ -480,6 +479,15 @@ export default function FinancialControlSystem() {
                   <span className="text-sm">{user.displayName}</span>
                 </div>
               )}
+              <button
+                onClick={() => setActiveView("settings")}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors ${
+                  activeView === "settings" ? "bg-white/20" : "hover:bg-white/10"
+                }`}
+              >
+                <Settings className="w-4 h-4" />
+                <span>Configurações</span>
+              </button>
               <Button variant="ghost" className="text-white hover:bg-white/10" onClick={handleSignOut}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Sair
@@ -700,7 +708,6 @@ export default function FinancialControlSystem() {
               />
             )}
             
-            {/* NOVO TRECHO DE CÓDIGO */}
             {activeView === "monthlyReport" && (
               <MonthlyReport
                 transactions={transactions}
@@ -708,7 +715,8 @@ export default function FinancialControlSystem() {
                 currentDate={currentDate}
               />
             )}
-            {/* FIM DO NOVO TRECHO DE CÓDIGO */}
+            
+            {activeView === "settings" && <SettingsPage />}
 
             {/* Transaction Form Modal */}
             {showTransactionForm && (
