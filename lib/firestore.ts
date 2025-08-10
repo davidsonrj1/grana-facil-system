@@ -250,6 +250,12 @@ export const recurringOperations = {
 export const batchOperations = {
   // Initialize default categories for new user
   initializeDefaultCategories: async (userId: string): Promise<void> => {
+    const existingCategories = await categoryOperations.getByUser(userId);
+    if (existingCategories.length > 0) {
+      console.log("Categorias já existem para este usuário. Inicialização ignorada.");
+      return;
+    }
+    
     const defaultCategories = [
       { name: "Educação", color: "#3b82f6", type: "expense" as const },
       { name: "Transporte", color: "#f59e0b", type: "expense" as const },
