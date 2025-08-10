@@ -1,30 +1,15 @@
-# Sistema de controle financeiro
+# Grana Fácil
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+Sistema de controle financeiro pessoal para gerenciar receitas, despesas e metas de forma fácil e rápida.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/davidsonrj1-gmailcoms-projects/v0-sistema-de-controle-financeiro)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/b4PpAk0Xcpa)
+## Como funciona
 
-## Overview
+- Você faz login com sua conta Google para ter seus dados sempre privados e sincronizados.
+- Pode adicionar, editar e excluir receitas e despesas, organizando tudo por categorias.
+- Define metas financeiras e acompanha seu progresso visualmente.
+- Configura transações recorrentes para que se repitam automaticamente.
+- Todos os dados ficam armazenados no Firebase Firestore e sincronizados em tempo real, então você vê as atualizações instantaneamente em qualquer dispositivo.
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+---
 
-## Deployment
-
-Your project is live at:
-
-**[https://vercel.com/davidsonrj1-gmailcoms-projects/v0-sistema-de-controle-financeiro](https://vercel.com/davidsonrj1-gmailcoms-projects/v0-sistema-de-controle-financeiro)**
-
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.dev/chat/projects/b4PpAk0Xcpa](https://v0.dev/chat/projects/b4PpAk0Xcpa)**
-
-## How It Works
-
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Qualquer dúvida, é só abrir uma issue!
